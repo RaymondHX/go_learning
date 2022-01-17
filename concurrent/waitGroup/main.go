@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"sync"
 )
 
@@ -22,6 +23,25 @@ func waitGruop() {
 	fmt.Println("finish")
 }
 
+func logicProcesser() {
+	runtime.GOMAXPROCS(1)
+	var wg = sync.WaitGroup{}
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 10000; i++ {
+			fmt.Println("A")
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		for i := 0; i < 10000; i++ {
+			fmt.Println("B")
+		}
+	}()
+	wg.Wait()
+}
+
 func main() {
-	waitGruop()
+	logicProcesser()
 }
